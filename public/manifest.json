@@ -1,0 +1,16 @@
+{
+    "name": "Sehati",
+    "short_name": "Sehati",
+    "background_color": "#febd25 ",
+    "display": "fullscreen",
+    "description": "Sehati",
+    "theme_color": "#febd25",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "logo_sehati.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
