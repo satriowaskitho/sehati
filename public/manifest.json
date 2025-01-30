@@ -8,7 +8,7 @@
     "start_url": "/",
     "icons": [
         {
-            "src": "logo_sehati.png",
+            "src": "logo_sehati_nobg.png",
             "sizes": "512x512",
             "type": "image/png"
         }

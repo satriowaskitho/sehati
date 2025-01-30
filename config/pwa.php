@@ -26,7 +26,7 @@ return [
         'theme_color' => '#febd25',
         'icons' => [
             [
-                'src' => 'logo_sehati_nobg.png.png',
+                'src' => 'logo_sehati_nobg.png',
                 'sizes' => '512x512',
                 'type' => 'image/png',
             ],
