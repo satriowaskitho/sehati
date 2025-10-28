@@ -201,7 +201,7 @@ class DatabaseSeeder extends Seeder
             // ['name' => 'Adi Cahyadi, SST', 'email' => 'adi.cahyadi@bps.go.id', 'email_verified_at' => now(), 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
             // ['name' => 'Zurianto Fathur Rachim, S.Tr.Stat.', 'email' => 'fathur.rachim@bps.go.id', 'email_verified_at' => now(), 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
             // ['name' => 'Prido Putra Sinaga, S.Tr.Stat.', 'email' => 'prido.sinaga@bps.go.id', 'email_verified_at' => now(), 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Farabi Arsy Edodivano Tauhid, S.Tr.Stat.', 'email' => 'farabi.arsy@bps.go.id', 'email_verified_at' => now(), 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
+            // ['name' => 'Farabi Arsy Edodivano Tauhid, S.Tr.Stat.', 'email' => 'farabi.arsy@bps.go.id', 'email_verified_at' => now(), 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
             // ['name' => 'Hafsha Daffa Dhiaulhaq, S.Tr.Stat.', 'email' => 'hafsha.daffa@bps.go.id', 'email_verified_at' => now(), 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
             // ['name' => 'Sopo Siahaan, S.Tr.Stat.', 'email' => 'sopo.siahaan@bps.go.id', 'email_verified_at' => now(), 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
             // ['name' => 'Fernandus Manurung, A.Md.', 'email' => 'fernandus.manurung@bps.go.id', 'email_verified_at' => now(), 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
@@ -279,6 +279,8 @@ class DatabaseSeeder extends Seeder
             // ['name' => 'Afriani Mahardika, SST', 'email' => 'mahardika@bps.go.id', 'email_verified_at' => now(), 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
             // ['name' => 'Mardhia Ulfa, A.Md', 'email' => 'mardhia@bps.go.id', 'email_verified_at' => now(), 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
             // ['name' => 'Raja Calvina Izumi, A.Md.Kb.N.', 'email' => 'raja.calvina@bps.go.id', 'email_verified_at' => now(), 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Wida Widiastuti S.Si., M.Sc.', 'email' => 'wida_w@bps.go.id', 'email_verified_at' => now(), 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
+            ['name' => ' Adam Luthfi Kusumatrisna SST, M.Si.', 'email' => 'adam.luthfi@bps.go.id', 'email_verified_at' => now(), 'password' => Hash::make('password'), 'created_at' => now(), 'updated_at' => now()],
         ];
 
         foreach ($users as $user) {

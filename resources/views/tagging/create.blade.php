@@ -14,7 +14,7 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <section class="bg-white dark:bg-gray-900">
                     <div class="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
-                        <form action="{{ route('tagging.store') }}" method="POST" class="space-y-4 form">
+                        <form action="{{ route('tagging.store') }}" method="POST" class="space-y-4 form"  id="tagging-form" onsubmit="checkLocationPermission(event)">
                             @csrf
 
                             <div>
@@ -73,76 +73,147 @@
             })
     </script>
     <script>
+        let map, marker;
+    
         // Cek apakah Geolocation API tersedia
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function (position) {
-                    // Ambil koordinat pengguna
-                    const userLat = position.coords.latitude;
-                    const userLng = position.coords.longitude;
+            function success(position) {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
     
-                    // Inisialisasi peta dengan lokasi pengguna
-                    const map = L.map('map').setView([userLat, userLng], 13);
+                if (!map) {
+                    // Inisialisasi peta hanya sekali
+                    map = L.map('map').setView([userLat, userLng], 13);
     
                     // Tambahkan tile layer (peta dasar)
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         maxZoom: 19,
-                        attribution: 'Â© OpenStreetMap contributors'
+                        attribution: '© OpenStreetMap contributors'
                     }).addTo(map);
     
                     // Tambahkan marker di lokasi pengguna
-                    const marker = L.marker([userLat, userLng]).addTo(map)
+                    marker = L.marker([userLat, userLng]).addTo(map)
                         .bindPopup('Anda berada di sini!').openPopup();
+                } else {
+                    // Jika peta sudah ada, perbarui posisi marker
+                    marker.setLatLng([userLat, userLng]);
+                    map.setView([userLat, userLng]); // Opsional, agar peta ikut bergerak
+                }
     
-                    // Menyimpan latitude dan longitude ke input hidden
-                    document.getElementById('latitude').value = userLat;
-                    document.getElementById('longitude').value = userLng;
-                },
-                function (error) {
-                    // Jika terjadi error (misalnya izin ditolak)
-                    console.error('Geolocation Error:', error.message);
+                // Menyimpan latitude dan longitude ke input hidden
+                document.getElementById('latitude').value = userLat;
+                document.getElementById('longitude').value = userLng;
+            }
     
-                    // Default lokasi jika tidak ada akses lokasi pengguna
-                    const defaultLat = -6.1751; // Jakarta
-                    const defaultLng = 106.8650;
+            function error(err) {
+                console.error('Geolocation Error:', err.message);
     
-                    const map = L.map('map').setView([defaultLat, defaultLng], 13);
+                const defaultLat = -6.1751; // Jakarta
+                const defaultLng = 106.8650;
     
+                if (!map) {
+                    map = L.map('map').setView([defaultLat, defaultLng], 13);
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         maxZoom: 19,
-                        attribution: 'Â© OpenStreetMap contributors'
+                        attribution: '© OpenStreetMap contributors'
                     }).addTo(map);
     
                     L.marker([defaultLat, defaultLng]).addTo(map)
                         .bindPopup('Lokasi default: Jakarta').openPopup();
-    
-                    // Menyimpan latitude dan longitude default ke input hidden
-                    document.getElementById('latitude').value = defaultLat;
-                    document.getElementById('longitude').value = defaultLng;
                 }
-            );
+    
+                document.getElementById('latitude').value = defaultLat;
+                document.getElementById('longitude').value = defaultLng;
+            }
+    
+            // Mulai tracking lokasi real-time
+            navigator.geolocation.watchPosition(success, error, {
+                enableHighAccuracy: true,
+                maximumAge: 0,
+                timeout: 5000
+            });
+    
         } else {
             console.error('Geolocation tidak didukung oleh browser ini.');
-    
-            // Default lokasi jika Geolocation API tidak didukung
-            const defaultLat = -6.1751; // Jakarta
-            const defaultLng = 106.8650;
-    
-            const map = L.map('map').setView([defaultLat, defaultLng], 13);
-    
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: 'Â© OpenStreetMap contributors'
-            }).addTo(map);
-    
-            L.marker([defaultLat, defaultLng]).addTo(map)
-                .bindPopup('Lokasi default: Jakarta').openPopup();
-    
-            // Menyimpan latitude dan longitude default ke input hidden
-            document.getElementById('latitude').value = defaultLat;
-            document.getElementById('longitude').value = defaultLng;
         }
     </script>
     
+    <script>
+        let watchId = null;
+        function updateLocation() {
+            if ("geolocation" in navigator) {
+                watchId = navigator.geolocation.watchPosition(
+                    function (position) {
+                        document.getElementById("latitude").value = position.coords.latitude;
+                        document.getElementById("longitude").value = position.coords.longitude;
+                    },
+                    function (error) {
+                        console.error("Error getting location: ", error);
+                    },
+                    {
+                        enableHighAccuracy: true, // Lebih akurat
+                        maximumAge: 0, // Selalu perbarui
+                        timeout: 5000 // Maksimum 5 detik sebelum gagal
+                    }
+                );
+            } else {
+                alert("Geolocation tidak didukung di browser ini.");
+            }
+        }
+    
+        // Panggil fungsi saat halaman dimuat
+        window.onload = updateLocation;
+    </script>
+    <script>
+        function checkLocationPermission(event) {
+            event.preventDefault(); // Mencegah submit form sebelum izin dicek
+    
+            navigator.permissions.query({ name: "geolocation" }).then(function (result) {
+                if (result.state === "granted") {
+                    document.getElementById("tagging-form").submit(); // Submit jika diizinkan
+                } else if (result.state === "denied") {
+                    alert("Akses lokasi tidak diizinkan! Silakan izinkan akses lokasi di pengaturan browser atau aplikasi Sehati anda.");
+                } else {
+                    navigator.geolocation.getCurrentPosition(
+                        function () {
+                            document.getElementById("tagging-form").submit(); // Jika user izinkan, lanjut submit
+                        },
+                        function () {
+                            alert("Akses lokasi tidak diizinkan! Mohon izinkan lokasi.");
+                        }
+                    );
+                }
+            });
+        }
+    </script>    
+    <script>
+        function requestLocationPermission() {
+            if (navigator.permissions) {
+                // Cek status izin lokasi
+                navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+                    if (result.state === 'granted') {
+                        console.log("Izin lokasi sudah diberikan.");
+                    } else if (result.state === 'prompt') {
+                        console.log("Meminta izin lokasi...");
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => console.log("Izin diberikan:", position),
+                            (error) => console.warn("Izin ditolak:", error.message)
+                        );
+                    } else {
+                        alert("Akses lokasi ditolak. Silakan izinkan di pengaturan browser!");
+                    }
+                });
+            } else {
+                // Fallback jika `permissions.query` tidak didukung
+                navigator.geolocation.getCurrentPosition(
+                    (position) => console.log("Izin diberikan:", position),
+                    (error) => alert("Akses lokasi diblokir. Silakan izinkan di pengaturan browser!")
+                );
+            }
+        }
+    
+        // Jalankan permintaan izin saat halaman dimuat
+        window.onload = requestLocationPermission;
+    </script>    
     @endpush
 </x-app-layout>

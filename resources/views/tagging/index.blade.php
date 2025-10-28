@@ -368,7 +368,7 @@
             document.addEventListener('DOMContentLoaded', function () {
             // Inisialisasi data untuk pagination
             let currentPage = 1;
-            const itemsPerPage = 3; // Jumlah item per halaman
+            const itemsPerPage = 12; // Jumlah item per halaman
             const shopItems = document.querySelectorAll('.shop-item');
             const totalItems = shopItems.length; // Total jumlah item yang ada
             const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage)); // Minimal 1 halaman, bahkan jika tidak ada data
